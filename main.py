@@ -1,12 +1,12 @@
 from flask import Flask, request
-# from telegram import Bot, Update
+from telegram import Bot, Update
 import os
 
 
 echo_app = Flask(__name__)
 
-# TOKEN = os.environ['TOKEN']
-# bot = Bot(TOKEN)
+TOKEN = os.environ['TOKEN']
+bot = Bot(TOKEN)
 
 
 @echo_app.route('/', methods=['POST', 'GET'])
@@ -16,7 +16,6 @@ def main():
 
     elif request.method == 'POST':
         data = request.get_json(force=True) # get data from request
-        
         # {
         #     'update_id': 366164447, 
         #     'message': {
@@ -27,9 +26,15 @@ def main():
         #         'text': 'salom'
         #         }
         # }
-        chat_id = data['message']['chat']['id']
-        text = data['message']['text']
 
-        print(chat_id, text)
+        update: Update = Update.de_json(data, bot)
+        
+        chat_id = update.message.chat_id
+        text = update.message.text
 
+        if text != None:
+            bot.send_message(chat_id, text)
+
+        print(chat_id)
+        
         return 'hello'
