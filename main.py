@@ -1,6 +1,12 @@
 from flask import Flask, request
 from telegram import Bot, Update
+from telegram.ext import Dispatcher, CommandHandler, MessageHandler, Filters
 import os
+
+from bot import (
+    start,
+    echo,
+)
 
 
 echo_app = Flask(__name__)
@@ -16,25 +22,13 @@ def main():
 
     elif request.method == 'POST':
         data = request.get_json(force=True) # get data from request
-        # {
-        #     'update_id': 366164447, 
-        #     'message': {
-        #         'message_id': 225, 
-        #         'from': {'id': 1258594598, 'is_bot': False, 'first_name': 'Diyorbek', 'last_name': 'Jumanov', 'username': 'jumanovdiyorbek', 'language_code': 'en'}, 
-        #         'chat': {'id': 1258594598, 'first_name': 'Diyorbek', 'last_name': 'Jumanov', 'username': 'jumanovdiyorbek', 'type': 'private'}, 
-        #         'date': 1676521987, 
-        #         'text': 'salom'
-        #         }
-        # }
 
-        update: Update = Update.de_json(data, bot)
+        dispatcher: Dispatcher = Dispatcher(bot, None, workers=0)
+        update: Update = Update.de_json(data, bot) # create an update obj
         
-        chat_id = update.message.chat_id
-        text = update.message.text
-
-        if text != None:
-            bot.send_message(chat_id, text)
-
-        print(chat_id)
+        dispatcher.add_handler(CommandHandler('start', callback=start))
+        dispatcher.add_handler(MessageHandler(Filters.text, echo))
+        
+        dispatcher.process_update(update)
         
         return 'hello'
