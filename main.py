@@ -12,17 +12,11 @@ bot = Bot(TOKEN)
 @echo_app.route('/', methods=['POST', 'GET'])
 def main():
     if request.method == 'GET':
-        return 'hi from Husniddin'
+        return 'hi from Python-2022I'
 
     elif request.method == 'POST':
-        data = request.get_json(force=True)
+        data = request.get_json(force=True) # get data from request
 
-        update: Update = Update.de_json(data, bot)
-
-        chat_id = update.message.chat.id
-        text = update.message.text
-
-        if text != None:
-            bot.send_message(chat_id, text)
+        print(data)
 
         return 'hello'
