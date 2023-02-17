@@ -22,7 +22,8 @@ def main():
     elif request.method == 'POST':
         data = request.get_json(force=True) # get data from request
 
-        update: Update.de_json(data, bot)
+        update: Update = Update.de_json(data, bot)
+        print(update)
 
         dp: Dispatcher = Dispatcher(bot, None, workers=0)  # dispatcher   
         
