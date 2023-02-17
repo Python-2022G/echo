@@ -1,14 +1,12 @@
 from telegram import Update
-from telegram.ext import CallbackContext
+from telegram.ext import CallbackContext, Updater
 
 
 def start(update: Update, context: CallbackContext):
-    bot = context.bot
-    chat_id = update.message.chat.id
-    
-    # send msg
-    bot.send_message(chat_id, 'WELCOME TO OUR BOT!')
+    update.message.reply_text('Welcome to our bot!')
+
 
 def echo(update: Update, context: CallbackContext):
     text = update.message.text
     update.message.reply_text(text)
+

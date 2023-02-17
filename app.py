@@ -1,13 +1,12 @@
 from flask import Flask, request
 from telegram import Bot, Update
-from telegram.ext import Dispatcher, CommandHandler, MessageHandler, Filters
+from telegram.ext import Dispatcher, MessageHandler, CommandHandler, Filters
 import os
 
 from main import (
     start,
-    echo,
+    echo
 )
-
 
 app = Flask(__name__)
 
@@ -23,12 +22,12 @@ def main():
     elif request.method == 'POST':
         data = request.get_json(force=True) # get data from request
 
-        dispatcher: Dispatcher = Dispatcher(bot, None, workers=0)
-        update: Update = Update.de_json(data, bot) # create an update obj
+        update: Update.de_json(data, bot)
+
+        dp: Dispatcher = Dispatcher(bot, None, workers=0)  # dispatcher   
         
-        dispatcher.add_handler(CommandHandler('start', callback=start))
-        dispatcher.add_handler(MessageHandler(Filters.text, echo))
-        
-        dispatcher.process_update(update)
-        
+        dp.add_handler(CommandHandler('start', start))
+        dp.add_handler(MessageHandler(Filters.text, echo))
+
+        dp.process_update(update) # process update
         return 'hello'
